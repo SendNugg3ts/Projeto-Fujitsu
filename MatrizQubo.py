@@ -39,10 +39,10 @@ for i in range(n):
         for tt in range(n):
             coluna = tradutor(tt, i)
             if t == tt:
-                Q2[linha][coluna] += 1
+                Q2[linha][coluna] -= 1
             else:
-                Q2[linha][coluna] -= 2
-        Q2[linha][linha] += 2
+                Q2[linha][coluna] += 2
+        
 Q2[N-1][N-1]=1
 Q2 = P2*Q2
 df2 = pd.DataFrame(Q2)
@@ -58,10 +58,10 @@ for t in range(n):
         for j in range(n):
             coluna = tradutor(t, j)
             if i == j:
-                Q3[linha][coluna] += 1
+                Q3[linha][coluna] -= 1
             else:
-                Q3[linha][coluna] -= 2
-        Q3[linha][linha] += 2
+                Q3[linha][coluna] += 2
+        
 Q3[N-1][N-1]=1
 Q3= P3*Q3
 
