@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 # Matriz de distâncias
 d = np.array([[0, 23, 23, 24],
@@ -9,8 +10,8 @@ d = np.array([[0, 23, 23, 24],
 n = len(d)
 
 def tradutor(row, col):
-    matrix_index = row * 4 + col
-    return matrix_index
+    ind_matriz = row * 4 + col
+    return ind_matriz
 
 # Criar o primeiro QUBO
 Q1 = np.zeros((17, 17))
@@ -25,6 +26,8 @@ for i in range(n):
                 coluna = tradutor(t+1, j)
             Q1[linha][coluna] = d[i][j]
 
+df = pd.DataFrame(Q1)
+df.to_excel("Q1.xlsx")
 
 # criar o segundo Qubo
 Q2 = np.zeros((17, 17))
@@ -36,11 +39,15 @@ for i in range(n):
         for tt in range(n):
             coluna = tradutor(tt, i)
             if t == tt:
-                Q2[linha][coluna] += P2*1
+                Q2[linha][coluna] += 1
             else:
-                Q2[linha][coluna] -= P2*2
-        Q2[linha][linha] += P2*1
-Q2[N-1][N-1]=P2*1
+                Q2[linha][coluna] -= 2
+        Q2[linha][linha] += 2
+Q2[N-1][N-1]=1
+Q2 = P2*Q2
+
+
+df = pd.DataFrame(Q2)
 
 # Criar o terceiro QUBO
 Q3 = np.zeros((17, 17))
@@ -51,11 +58,12 @@ for t in range(n):
         for j in range(n):
             coluna = tradutor(t, j)
             if i == j:
-                Q3[linha][coluna] += P3*1
+                Q3[linha][coluna] += 1
             else:
-                Q3[linha][coluna] -= P3*2
-        Q3[linha][linha] += P3*1
-Q3[N-1][N-1]=P3*1
+                Q3[linha][coluna] -= 2
+        Q3[linha][linha] += 2
+Q3[N-1][N-1]=1
+Q3= P3*Q3
 
 Q= Q1+Q2+Q3
 
@@ -67,9 +75,9 @@ response = sampler.sample_qubo(Q)
 sample = response.first.sample
 
 # Criar uma lista com as cidades visitadas
-cities_visited = [i for i in range(n) if sample[tradutor(t, i)] == 1]
-cities_visited.append(cities_visited[0])  # Adicionar a última cidade visitada (primeira da lista)
+cidades_visitadas= [i for i in range(n) if sample[tradutor(t, i)] == 1]
+cidades_visitadas.append(cidades_visitadas[0])  # Adicionar a última cidade visitada (primeira da lista)
 
 # Mostrar a lista de cidades visitadas
-print(cities_visited)
+print(cidades_visitadas)
 
