@@ -45,9 +45,9 @@ for i in range(n):
         Q2[linha][linha] += 2
 Q2[N-1][N-1]=1
 Q2 = P2*Q2
+df2 = pd.DataFrame(Q2)
+df2.to_excel("Q2.xlsx")
 
-
-df = pd.DataFrame(Q2)
 
 # Criar o terceiro QUBO
 Q3 = np.zeros((17, 17))
