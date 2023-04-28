@@ -81,12 +81,20 @@ else:
 sampler = TabuSampler()
 response = sampler.sample_qubo()
 print(response)
+
+
 # Encontrar a solução com menor energia
 sample = response.first.sample
 
 # Criar uma lista com as cidades visitadas
-cidades_visitadas= [i for i in range(n) if sample[tradutor(t, i)] == 1]
-cidades_visitadas.append(cidades_visitadas[0])  # Adicionar a última cidade visitada (primeira da lista)
+cidades_visitadas = []
+for t in range(n):
+    cidade = [i for i in range(n) if sample[tradutor(t, i)] == 1]
+    if cidade:
+        cidades_visitadas.append(cidade[0])
+
+# Adicionar a primeira cidade no final da lista
+cidades_visitadas.append(cidades_visitadas[0])
 
 # Mostrar a lista de cidades visitadas
 print(cidades_visitadas)
