@@ -31,7 +31,7 @@ df.to_excel("Q1.xlsx")
 
 # criar o segundo Qubo
 Q2 = np.zeros((16, 16))
-P2= 110
+P2= 1
 for i in range(n):
     for t in range(n):
         linha = tradutor(t, i)
@@ -50,7 +50,7 @@ df2.to_excel("Q2.xlsx")
 
 # Criar o terceiro QUBO
 Q3 = np.zeros((16, 16))
-P3=110
+P3=1
 for t in range(n):
     for i in range(n):
         linha = tradutor(t, i)
@@ -65,9 +65,7 @@ Q3= P3*Q3
 df3 = pd.DataFrame(Q3)
 df3.to_excel("Q3.xlsx")
 
-
 Q= Q1+Q2+Q3
-
 
 b = Q.transpose()
 # Comparing both arrays using array_equal() method
@@ -79,7 +77,7 @@ else:
 
 
 sampler = TabuSampler()
-response = sampler.sample_qubo()
+response = sampler.sample_qubo(Q1)
 print(response)
 
 
