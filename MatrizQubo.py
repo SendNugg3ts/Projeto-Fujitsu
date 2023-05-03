@@ -18,9 +18,12 @@ def tradutor(row, col):
 Q1 = np.zeros((16, 16))
 for i in range(n):
     for j in range(n):
-        for t in range(n-1):
+        for t in range(n):
             linha = tradutor(t, i)
-            coluna = tradutor(t+1, j)
+            if t == 3:
+                coluna = tradutor(0, j)
+            else:
+                coluna = tradutor(t+1, j)
             Q1[linha][coluna] = d[i][j]/2
             Q1[coluna][linha] = d[i][j]/2
 
@@ -77,7 +80,7 @@ else:
 
 
 sampler = TabuSampler()
-response = sampler.sample_qubo(Q1)
+response = sampler.sample_qubo(Q2)
 print(response)
 
 
