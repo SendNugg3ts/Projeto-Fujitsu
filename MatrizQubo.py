@@ -74,7 +74,9 @@ sampler = TabuSampler()
 response = sampler.sample_qubo(Q)
 print(response)
 
-
+response= np.array([0 , 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  1 ])
+response =np.array([0,  0,  0,  1,  0,  1,  0,  0,  1,  0,  0,  0,  0,  0,  1,  0 ])
+np.reshape(response,(4,4))
 # Encontrar a solução com menor energia
 sample = response.first.sample
 
