@@ -1,0 +1,6 @@
+Objetivos Trabalho Fujitsu:
+
+
++ identificar qual é o numero máximo de cidades que o Sampler consegue processar até o maximo de 1 minutos de computação/execução.
++ determinar o custo do caminho/solução de forma automática, interpretando o caminho sugerido pela solução (extrair o custo a partir da solução do Sampler).
++ esboçar/desenvolver a parte do relatorio relativa ao TSP, uma breve explicação para o relatório.
