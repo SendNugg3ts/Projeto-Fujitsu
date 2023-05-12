@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import math
+
 from tabu import TabuSampler
 
 # Matriz de distâncias
@@ -164,9 +166,17 @@ Q = Q1+Q2+Q3
 
 sampler = TabuSampler()
 response = sampler.sample_qubo(Q)
-print(list(response.samples()))
+list_response = list(response.samples())
+print(list_response)
 
+caminho = []
+# transformar dicionario em matrix
+x = list(list_response[0].values())
+matriz = np.reshape(x, (5,5))
+print(matriz)
 
-
-
-
+for linha in matriz:
+    for i in range(len(linha)):
+        if linha[i] == 1:
+            caminho.append(i)
+print(caminho)
