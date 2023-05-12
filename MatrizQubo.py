@@ -167,18 +167,19 @@ Q = Q1+Q2+Q3
 sampler = TabuSampler()
 response = sampler.sample_qubo(Q)
 list_response = list(response.samples())
-print(list_response)
-
-caminho = []
+#Converter sampler em caminho
+cidades_visitadas = []
 # transformar dicionario em matrix
-x = list(list_response[0].values())
-# detetar automaticamente as dimensoes da matriz
-shape = int(math.sqrt(len(x)))
-matriz = np.reshape(x, (shape, shape))
+caminhoBinario = np.array(list(list_response[0].values()))
+shape = int(math.sqrt(len(caminhoBinario)))
+matriz = np.reshape(caminhoBinario, (shape, shape))
 print(matriz)
 
-for linha in matriz:
-    for i in range(len(linha)):
-        if linha[i] == 1:
-            caminho.append(i)
-print(caminho)
+n = len(matriz)
+for t in range(n):
+    cidade = [i for i in range(n) if caminhoBinario[tradutor(t, i)] == 1]
+    if cidade:
+        cidades_visitadas.append(cidade[0])
+
+cidades_visitadas.append(cidades_visitadas[0])
+print(cidades_visitadas)
