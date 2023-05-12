@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import math
 
 from tabu import TabuSampler
 
@@ -171,7 +172,9 @@ print(list_response)
 caminho = []
 # transformar dicionario em matrix
 x = list(list_response[0].values())
-matriz = np.reshape(x, (5,5))
+# detetar automaticamente as dimensoes da matriz
+shape = int(math.sqrt(len(x)))
+matriz = np.reshape(x, (shape, shape))
 print(matriz)
 
 for linha in matriz:
