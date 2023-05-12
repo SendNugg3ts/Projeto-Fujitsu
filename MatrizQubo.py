@@ -164,7 +164,7 @@ Q = Q1+Q2+Q3
 
 sampler = TabuSampler()
 response = sampler.sample_qubo(Q)
-print(response)
+print(list(response.samples()))
 
 
 
