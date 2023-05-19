@@ -154,7 +154,7 @@ def QubosCreator(dimensao, matriz):
 def CidadesMax():
     sampler = TabuSampler()
     TEMPO=0
-    n=2
+    n=122 #tempo que o meu pc demorou a correr antes de demorar 1 minuto, 122 cidades, CPU- I5-8600K
     while TEMPO < 60:
         n += 1
         start = time.time()
