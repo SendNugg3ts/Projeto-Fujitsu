@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import math
 import time
-
+import folium
 from tabu import TabuSampler
 
 # Matriz de distâncias
@@ -38,7 +38,7 @@ df.to_excel("Q1.xlsx")
 
 # criar o segundo Qubo
 Q2 = np.zeros((16, 16))
-P2= 100
+P2= 50
 for i in range(n):
     for t in range(n):
         linha = tradutor(t, i,n)
@@ -57,7 +57,7 @@ df2.to_excel("Q2.xlsx")
 
 # Criar o terceiro QUBO
 Q3 = np.zeros((16, 16))
-P3=100
+P3=50
 for t in range(n):
     for i in range(n):
         linha = tradutor(t, i,n)
@@ -101,11 +101,9 @@ print(cidades_visitadas)
 
 def gerar_matriz(dimensao):
     matriz = np.zeros((dimensao, dimensao))  # Cria uma matriz de zeros com a dimensão desejada
-    
     for i in range(dimensao):
         for j in range(i + 1, dimensao):
             matriz[i, j] = matriz[j, i] = np.random.randint(40, 700)  # Preenche os elementos com valores aleatórios entre 1 e 50
-    
     return matriz
 
 
@@ -125,7 +123,7 @@ def QubosCreator(dimensao, matriz):
                 Q1[coluna][linha] = d[i][j]/2
     # criar o segundo Qubo
     Q2 = np.zeros((dimensao**2, dimensao**2))
-    P2= 1000
+    P2= 420
     for i in range(n):
         for t in range(n):
             linha = tradutor(t, i,n)
@@ -138,7 +136,7 @@ def QubosCreator(dimensao, matriz):
     Q2 = P2*Q2
     # Criar o terceiro QUBO
     Q3 = np.zeros((dimensao**2, dimensao**2))
-    P3=1000
+    P3=400
     for t in range(n):
         for i in range(n):
             linha = tradutor(t, i,n)
@@ -207,7 +205,7 @@ def custo(d,legenda):
         cidade1= j
         cidade2= caminho[i+1]
         custo+= d[cidade1,cidade2]
-    return custo
+    return caminho_legendado,custo
         
 ##############################################CRIAR A MATRIZ DE DISTÂNCIAS PARA OS 18 DISTRITOS#######################################################
 # Função para converter graus em radianos
@@ -280,6 +278,54 @@ for i in range(num_distritos):
         distancia = calcular_distancia(coordenadas[distritos[i]], coordenadas[distritos[j]])
         matriz_distancias[i, j] = distancia
 
-
-custo_total=custo(matriz_distancias,legenda)
+ordem_distritos,custo_total=custo(matriz_distancias,legenda)
 print(f"Distância total:  {custo_total} km")
+print(len(ordem_distritos))
+
+def grafico_caminho(distritos):
+    # Adiciona o primeiro distrito no final da lista para completar o ciclo
+    distritos.append(distritos[0])
+    # Extrai as coordenadas dos distritos
+    coordenadas = grafico_coordenadas(distritos)
+    # Cria um mapa centrado em Portugal continental
+    mapa = folium.Map(location=[39.5, -8], zoom_start=7)
+    # Adiciona marcadores para cada distrito
+    for i, coord in enumerate(coordenadas):
+        distrito = distritos[i]
+        folium.Marker(coord, popup=distrito).add_to(mapa)
+    # Adiciona uma linha para ligar os marcadores
+    folium.PolyLine(coordenadas, color='blue', weight=2.5, opacity=1).add_to(mapa)
+    # Salva o mapa como um arquivo HTML
+    mapa.save("mapa.html")
+
+
+
+
+
+
+
+def grafico_coordenadas(distritos):
+    coordenadas = {
+        'Aveiro': (40.6405, -8.6538),
+        'Beja': (38.0151, -7.8631),
+        'Braga': (41.5454, -8.4265),
+        'Bragança': (41.8071, -6.7583),
+        'Castelo Branco': (39.8238, -7.4937),
+        'Coimbra': (40.2110, -8.4293),
+        'Évora': (38.5737, -7.9077),
+        'Faro': (37.0179, -7.9307),
+        'Guarda': (40.5370, -7.2673),
+        'Leiria': (39.7442, -8.8070),
+        'Lisboa': (38.7223, -9.1393),
+        'Portalegre': (39.2938, -7.4313),
+        'Porto': (41.1496, -8.6109),
+        'Santarém': (39.2362, -8.6850),
+        'Setúbal': (38.5244, -8.8945),
+        'Viana do Castelo': (41.6918, -8.8349),
+        'Vila Real': (41.3005, -7.7437),
+        'Viseu': (40.6610, -7.9097)
+    }
+
+    return [coordenadas[distrito] for distrito in distritos]
+
+grafico_caminho(ordem_distritos)
