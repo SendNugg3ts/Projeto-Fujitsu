@@ -107,7 +107,7 @@ def gerar_matriz(dimensao):
     return matriz
 
 
-def QubosCreator(dimensao, matriz):
+def QubosCreator(dimensao, matriz,inicio):
     n=dimensao
     d=matriz
     Q1 = np.zeros((n**2, n**2))
@@ -147,7 +147,20 @@ def QubosCreator(dimensao, matriz):
                 else:
                     Q3[linha][coluna] += 2/2
     Q3= P3*Q3
-    return Q1, Q2, Q3
+    Q4 = np.zeros((dimensao**2, dimensao**2))
+    P4=400
+    posicao=legenda[inicio]
+    for i in range(n):
+        linha = tradutor(0, i,n)
+        for j in range(n):
+            coluna = tradutor(0, j,n)
+            if i == posicao or j == posicao:
+                Q4[linha][coluna] -= 1
+            else:
+                Q4[linha][coluna] += 2/2
+    Q4 = P4 * Q4
+    print(Q4)
+    return Q1, Q2, Q3,Q4
 
 def CidadesMax():
     sampler = TabuSampler()
@@ -157,8 +170,8 @@ def CidadesMax():
         n += 1
         start = time.time()
         matriz=gerar_matriz(n)
-        Q1,Q2,Q3 = QubosCreator(n,matriz)
-        Q = Q1+Q2+Q3
+        Q1,Q2,Q3,Q4 = QubosCreator(n,matriz,"Braga")
+        Q = Q1+Q2+Q3+Q4
         response = sampler.sample_qubo(Q)
         end = time.time()
         TEMPO = end - start
@@ -166,11 +179,11 @@ def CidadesMax():
     print(n)
     print(TEMPO)
 
-def CaminhoOptimo(d):
+def CaminhoOptimo(d,inicio):
     sampler = TabuSampler()
     n = len(d)
-    Q1,Q2,Q3 = QubosCreator(n,d)
-    Q = Q1+Q2+Q3
+    Q1,Q2,Q3,Q4 = QubosCreator(n,d,inicio)
+    Q = Q1+Q2+Q3+Q4
     response = sampler.sample_qubo(Q)  
     list_response = list(response.samples())
     #Converter sampler em caminho
@@ -189,8 +202,8 @@ def CaminhoOptimo(d):
     print(f"Solução:{cidades_visitadas}")
     return cidades_visitadas
 
-def custo(d,legenda):
-    caminho= CaminhoOptimo(d)
+def custo(d,legenda,inicio):
+    caminho= CaminhoOptimo(d,inicio)
     caminho_legendado=[]
     for i in caminho:
         for cidade, indx in legenda.items():
@@ -278,29 +291,44 @@ for i in range(num_distritos):
         distancia = calcular_distancia(coordenadas[distritos[i]], coordenadas[distritos[j]])
         matriz_distancias[i, j] = distancia
 
-ordem_distritos,custo_total=custo(matriz_distancias,legenda)
+ordem_distritos,custo_total=custo(matriz_distancias,legenda,"Braga")
+
 print(f"Distância total:  {custo_total} km")
 print(len(ordem_distritos))
 
+guardar_resultados={}
+for i in range(100):
+    ordem_distritos,custo_total=custo(matriz_distancias,legenda,"Braga")
+    guardar_resultados[i]= ordem_distritos, custo_total
+
+melhor_custo = float('inf')  # inicializar com um valor infinito para encontrar o mínimo
+melhor_ordem_distritos = None
+
+for i in guardar_resultados:
+    ordem_distritos, custo_total = guardar_resultados[i]
+    if custo_total < melhor_custo:
+        melhor_custo = custo_total
+        melhor_ordem_distritos = ordem_distritos
+
+print("Menor custo_total:", melhor_custo,"km")
+print("Ordem distritos correspondente:", melhor_ordem_distritos)
+
+ 
 def grafico_caminho(distritos):
     # Adiciona o primeiro distrito no final da lista para completar o ciclo
     distritos.append(distritos[0])
     # Extrai as coordenadas dos distritos
     coordenadas = grafico_coordenadas(distritos)
     # Cria um mapa centrado em Portugal continental
-    mapa = folium.Map(location=[39.5, -8], zoom_start=7)
+    mapa = folium.Map(location=[39.5, -8], zoom_start=7,tiles='CartoDB Positron')
     # Adiciona marcadores para cada distrito
     for i, coord in enumerate(coordenadas):
         distrito = distritos[i]
-        folium.Marker(coord, popup=distrito).add_to(mapa)
+        folium.Marker(coord, popup=distrito, icon=folium.Icon(color="red")).add_to(mapa)
     # Adiciona uma linha para ligar os marcadores
-    folium.PolyLine(coordenadas, color='blue', weight=2.5, opacity=1).add_to(mapa)
+    folium.PolyLine(coordenadas, color='black', weight=2.5, opacity=1).add_to(mapa)
     # Salva o mapa como um arquivo HTML
     mapa.save("mapa.html")
-
-
-
-
 
 
 
@@ -328,4 +356,4 @@ def grafico_coordenadas(distritos):
 
     return [coordenadas[distrito] for distrito in distritos]
 
-grafico_caminho(ordem_distritos)
+grafico_caminho(melhor_ordem_distritos)
