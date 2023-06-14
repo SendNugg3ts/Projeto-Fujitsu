@@ -117,7 +117,7 @@ def QubosCreator(dimensao, matriz,inicio):
                 Q1[coluna][linha] = d[i][j]/2
     # criar o segundo Qubo
     Q2 = np.zeros((dimensao**2, dimensao**2))
-    P2= 420
+    P2= 2100
     for i in range(n):
         for t in range(n):
             linha = tradutor(t, i,n)
@@ -130,7 +130,7 @@ def QubosCreator(dimensao, matriz,inicio):
     Q2 = P2*Q2
     # Criar o terceiro QUBO
     Q3 = np.zeros((dimensao**2, dimensao**2))
-    P3=400
+    P3=2100
     for t in range(n):
         for i in range(n):
             linha = tradutor(t, i,n)
@@ -191,7 +191,6 @@ def CaminhoOptimo(d,inicio):
         cidade = [i for i in range(n) if caminhoBinario[tradutor(t, i,n)] == 1]
         if cidade:
             cidades_visitadas.append(cidade[0])
-
     cidades_visitadas.append(cidades_visitadas[0])
     print(f"Solução:{cidades_visitadas}")
     return cidades_visitadas
@@ -302,11 +301,9 @@ for i in guardar_resultados:
 
 print("Menor custo_total:", melhor_custo,"km")
 print("Ordem distritos correspondente:", melhor_ordem_distritos)
-
+len(melhor_ordem_distritos)
  
 def grafico_caminho(distritos):
-    # Adiciona o primeiro distrito no final da lista para completar o ciclo
-    distritos.append(distritos[0])
     # Extrai as coordenadas dos distritos
     coordenadas = grafico_coordenadas(distritos)
     # Cria um mapa centrado em Portugal continental
@@ -317,7 +314,7 @@ def grafico_caminho(distritos):
         folium.Marker(coord, popup=distrito, icon=folium.Icon(color="red")).add_to(mapa)
     # Adiciona uma linha para ligar os marcadores
     folium.PolyLine(coordenadas, color='black', weight=2.5, opacity=1).add_to(mapa)
-    # Salva o mapa como um arquivo HTML
+    #Guarda o mapa como um ficheiro HTML
     mapa.save("mapa.html")
 
 
