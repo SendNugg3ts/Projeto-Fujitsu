@@ -72,28 +72,23 @@ df3 = pd.DataFrame(Q3)
 df3.to_excel("Q3.xlsx")
 
 Q = Q1+Q2+Q3
-
 sampler = TabuSampler()
 response = sampler.sample_qubo(Q)
 print(response)
-
 response = np.array([0 , 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  1 ])#sem restrições
 response = np.array([0,  0,  0,  1,  0,  1,  0,  0,  1,  0,  0,  0,  0,  0,  1,  0 ])#3, 1, 0, 2, 3
 response = np.array([ 0 , 1 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0  ,1])#1, 0, 2, 3, 1
 np.reshape(response,(4,4))
 # Encontrar a solução com menor energia
 sample = response
-
 # Criar uma lista com as cidades visitadas
 cidades_visitadas = []
 for t in range(n):
     cidade = [i for i in range(n) if sample[tradutor(t, i,n)] == 1]
     if cidade:
         cidades_visitadas.append(cidade[0])
-
 # Adicionar a primeira cidade no final da lista
 cidades_visitadas.append(cidades_visitadas[0])
-
 # Mostrar a lista de cidades visitadas
 print(cidades_visitadas)
 
@@ -164,7 +159,7 @@ def QubosCreator(dimensao, matriz,inicio):
 def CidadesMax():
     sampler = TabuSampler()
     TEMPO=0
-    n=131 #tempo que o meu pc demorou a correr antes de demorar 1 minuto, 131 cidades, CPU- I5-8600K
+    n=131                                               #1 minuto, 131 cidades, CPU- I5-8600K
     while TEMPO < 60:
         n += 1
         start = time.time()
