@@ -11,7 +11,6 @@ d = np.array([[0, 23, 23, 24],
               [23, 40, 0, 23],
               [24, 20, 23, 0]])
 
-[1, 3, 2, 0, 1]
 n = len(d)
 
 def tradutor(row, col, n):
@@ -165,7 +164,7 @@ def QubosCreator(dimensao, matriz,inicio):
 def CidadesMax():
     sampler = TabuSampler()
     TEMPO=0
-    n=122 #tempo que o meu pc demorou a correr antes de demorar 1 minuto, 122 cidades, CPU- I5-8600K
+    n=131 #tempo que o meu pc demorou a correr antes de demorar 1 minuto, 131 cidades, CPU- I5-8600K
     while TEMPO < 60:
         n += 1
         start = time.time()
