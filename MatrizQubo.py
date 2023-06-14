@@ -159,7 +159,7 @@ def QubosCreator(dimensao, matriz,inicio):
 def CidadesMax():
     sampler = TabuSampler()
     TEMPO=0
-    n=131                                               #1 minuto, 131 cidades, CPU- I5-8600K
+    n=131#1 minuto, 131 cidades, CPU- I5-8600K
     while TEMPO < 60:
         n += 1
         start = time.time()
@@ -219,11 +219,11 @@ def custo(d,legenda,inicio):
 def degrees_to_radians(degrees):
     return degrees * np.pi / 180.0
 
-# Função para calcular a distância em quilômetros entre duas coordenadas geográficas
+# Função para calcular a distância em km entre duas coordenadas geográficas
 def calcular_distancia(coord1, coord2):
     lat1, lon1 = coord1
     lat2, lon2 = coord2
-    radius = 6371  # Raio médio da Terra em quilômetros
+    radius = 6371  # Raio médio da Terra em km
     dlat = degrees_to_radians(lat2 - lat1)
     dlon = degrees_to_radians(lon2 - lon1)
     a = np.sin(dlat/2) * np.sin(dlat/2) + np.cos(degrees_to_radians(lat1)) * np.cos(degrees_to_radians(lat2)) * np.sin(dlon/2) * np.sin(dlon/2)
@@ -275,18 +275,14 @@ legenda = {
 
 distritos = list(coordenadas.keys())
 num_distritos = len(distritos)
-
 # Criar uma matriz vazia para armazenar as distâncias
 matriz_distancias = np.zeros((num_distritos, num_distritos))
-
 # Calcular as distâncias em quilômetros entre os distritos
 for i in range(num_distritos):
     for j in range(num_distritos):
         distancia = calcular_distancia(coordenadas[distritos[i]], coordenadas[distritos[j]])
         matriz_distancias[i, j] = distancia
-
 ordem_distritos,custo_total=custo(matriz_distancias,legenda,"Braga")
-
 print(f"Distância total:  {custo_total} km")
 print(len(ordem_distritos))
 
