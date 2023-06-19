@@ -10,7 +10,7 @@ distancias = {
 city_count = 3
 while True:
     start_time = time.time()
-    # Add a new city with random distances
+    #Adiciona uma nova cidade com distancia entre 20 e 400
     city_count += 1
     new_city = f"City{city_count}"
     cidades.append(new_city)
@@ -35,7 +35,7 @@ while True:
         if distancia_total < menor_distancia:
             menor_distancia = distancia_total
             melhor_rota = permutacao
-    # Calculate elapsed time
+    #Calcula o temo até chegar a mais de 1 minuto
     elapsed_time = time.time() - start_time
     print(elapsed_time)
     if elapsed_time > 60:
