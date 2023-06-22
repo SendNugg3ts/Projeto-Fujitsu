@@ -303,18 +303,19 @@ print("Menor custo_total:", melhor_custo,"km")
 print("Ordem distritos correspondente:", melhor_ordem_distritos)
 len(melhor_ordem_distritos)
  
-def grafico_caminho(distritos):
-    # Extrai as coordenadas dos distritos
+def grafico_caminho(distritos, ponto_partida):
     coordenadas = grafico_coordenadas(distritos)
-    # Cria um mapa centrado em Portugal continental
-    mapa = folium.Map(location=[39.5, -8], zoom_start=7,tiles='CartoDB Positron')
-    # Adiciona marcadores para cada distrito
+    mapa = folium.Map(location=[39.5, -8], zoom_start=7, tiles='CartoDB Positron')
+
     for i, coord in enumerate(coordenadas):
         distrito = distritos[i]
-        folium.Marker(coord, popup=distrito, icon=folium.Icon(color="red")).add_to(mapa)
-    # Adiciona uma linha para ligar os marcadores
+        # Verifica se é o ponto de partida e adiciona um marcador especial
+        if distrito == ponto_partida:
+            folium.Marker(coord, popup=distrito, icon=folium.Icon(color="green")).add_to(mapa)
+        else:
+            folium.Marker(coord, popup=distrito, icon=folium.Icon(color="red")).add_to(mapa)
+
     folium.PolyLine(coordenadas, color='black', weight=2.5, opacity=1).add_to(mapa)
-    #Guarda o mapa como um ficheiro HTML
     mapa.save("mapa.html")
 
 
@@ -343,4 +344,4 @@ def grafico_coordenadas(distritos):
 
     return [coordenadas[distrito] for distrito in distritos]
 
-grafico_caminho(melhor_ordem_distritos)
+grafico_caminho(melhor_ordem_distritos,"Braga")
